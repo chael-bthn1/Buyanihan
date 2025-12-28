@@ -204,18 +204,45 @@
         <div class="container-fluid">
             <div class="row align-items-stretch">
                 <!-- LEFT COLUMN: Text -->
-                <div class="col-md-6 d-flex flex-column justify-content-center px-4">
-                    <h2 class="fw-bold fs-1">About Buyanihan</h2>
-                    <p class="fs-4 mt-3">
-                        Buyanihan connects verified local MSMEs with nearby consumers through a safe,
-                        simple, and mobile-friendly marketplace inspired by Filipino community values.
-                        We help local sellers grow their business while giving consumers access to
-                        quality local products.
-                    </p>
-                    <p class="fs-4">
-                        Our mission is to promote the Filipino spirit of bayanihan by supporting local
-                        entrepreneurship and creating a sustainable community-driven marketplace.
-                    </p>
+                <div class="col-md-6 d-flex align-items-center bg-light">
+                    <div class="p-5">
+
+                        <!-- Accent Line -->
+                        <div class="mb-3" style="width: 60px; height: 4px; background-color: var(--color-5);"></div>
+
+                        <h2 class="fw-bold display-6 mb-3">About Buyanihan</h2>
+
+                        <p class="fs-5 text-muted">
+                            Buyanihan is a community-driven digital marketplace that connects verified local MSMEs
+                            with nearby consumers through a secure, user-friendly, and mobile-responsive platform.
+                        </p>
+
+                        <p class="fs-5 text-muted">
+                            Inspired by the Filipino spirit of bayanihan, the platform empowers local entrepreneurs,
+                            fosters trust between buyers and sellers, and supports sustainable local commerce.
+                        </p>
+
+                        <!-- Feature Highlights -->
+                        <div class="row mt-4">
+                            <div class="col-6 mb-3">
+                                <h6 class="fw-bold mb-1 text-success">✔ Verified Sellers</h6>
+                                <p class="small text-muted mb-0">Barangay-verified local businesses</p>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <h6 class="fw-bold mb-1 text-success">✔ Secure Transactions</h6>
+                                <p class="small text-muted mb-0">Transparent and trusted marketplace</p>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="fw-bold mb-1 text-success">✔ Community-Driven</h6>
+                                <p class="small text-muted mb-0">Built for local growth</p>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="fw-bold mb-1 text-success">✔ Mobile-Friendly</h6>
+                                <p class="small text-muted mb-0">Optimized for all devices</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
                 <!-- RIGHT COLUMN: Full-height Image -->
@@ -232,6 +259,14 @@
     <section id="marketplace" class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">Marketplace</h2>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyMarketplace" class="text-center py-5">
+                <h4 class="fw-bold text-muted">The Marketplace is Empty</h4>
+                <p class="text-muted">Be the first to list a product!</p>
+            </div>
+
+            <!-- PRODUCT LIST -->
             <div class="row" id="productList"></div>
         </div>
     </section>
@@ -307,18 +342,69 @@
     </section>
 
 
-    <!-- SECTION 6: CONTACT -->
+    <!-- SECTION 6: FEEDBACK & CONCERNS -->
     <section id="contact" class="py-5">
         <div class="container">
-            <h2 class="text-center mb-4">Contact Us</h2>
-            <form class="col-md-6 mx-auto">
-                <input class="form-control mb-3" placeholder="Name">
-                <input class="form-control mb-3" placeholder="Email">
-                <textarea class="form-control mb-3" placeholder="Message"></textarea>
-                <button class="btn btn-primary w-100">Submit</button>
-            </form>
+            <h2 class="text-center fw-bold mb-2">Feedback & Concerns</h2>
+            <p class="text-center text-muted mb-4">
+                Help us improve Buyanihan by sharing your feedback or reporting concerns.
+            </p>
+
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <form>
+                                <!-- Name -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Full Name</label>
+                                    <input type="text" class="form-control" placeholder="Juan Dela Cruz" required>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Email Address</label>
+                                    <input type="email" class="form-control" placeholder="you@email.com" required>
+                                </div>
+
+                                <!-- Type -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Type of Submission</label>
+                                    <select class="form-select" required>
+                                        <option value="">Select one</option>
+                                        <option>General Feedback</option>
+                                        <option>Report a Seller</option>
+                                        <option>Report a Buyer</option>
+                                        <option>Bug / Technical Issue</option>
+                                        <option>Other Concern</option>
+                                    </select>
+                                </div>
+
+                                <!-- Message -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Message</label>
+                                    <textarea class="form-control" rows="4"
+                                        placeholder="Describe your feedback or concern in detail..."
+                                        required></textarea>
+                                </div>
+
+                                <!-- Submit -->
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Submit Feedback
+                                </button>
+
+                                <!-- Note -->
+                                <p class="text-muted small text-center mt-3 mb-0">
+                                    All submissions are confidential and will be reviewed by the Buyanihan team.
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
 
     <!-- SELL MODAL -->
     <div class="modal fade" id="sellModal">
@@ -461,135 +547,184 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        let currentProduct = null;
         let products = [];
+        let currentProductEl = null;
 
-        // Add a new product
-        function addProduct() {
-            const sellerName = document.getElementById("sellerName").value;
-            const sellerContact = document.getElementById("sellerContact").value;
-            const sellerAddress = document.getElementById("sellerAddress").value;
-            const barangayClearance = document.getElementById("barangayClearance").files[0];
+        /* =========================
+           MARKETPLACE EMPTY STATE
+        ========================= */
+        function updateMarketplaceState() {
+            const emptyState = document.getElementById("emptyMarketplace");
+            const productList = document.getElementById("productList");
 
-            const name = document.getElementById("pName").value;
-            const price = document.getElementById("pPrice").value;
-            const desc = document.getElementById("pDesc").value;
-            const imageFile = document.getElementById("pImage").files[0];
-
-            const payments = [];
-            if (document.getElementById("payGCash").checked) payments.push("GCash");
-            if (document.getElementById("payMaya").checked) payments.push("Maya");
-            if (document.getElementById("payCash").checked) payments.push("Cash on Delivery");
-
-            const product = {
-                sellerName, sellerContact, sellerAddress, barangayClearance,
-                name, price, desc, imageFile, payments
-            };
-            products.push(product);
-
-            // Create product card
-            const card = document.createElement("div");
-            card.className = "col-md-4 mb-3";
-
-            let imgHTML = '';
-            if (imageFile) {
-                const imgURL = URL.createObjectURL(imageFile);
-                imgHTML = `<img src="${imgURL}" class="card-img-top mb-2" alt="${name}">`;
-            }
-
-            card.innerHTML = `
-        <div class="card">
-            ${imgHTML}
-            <div class="card-body">
-                <h5 class="card-title fs-4 fw-bold">${name}</h5>
-                <p class="card-text fs-6 mb-1">${desc}</p>
-                <p class="card-text fs-5 mb-1"><strong>₱${price}</strong></p>
-                <p class="card-text fs-6 mb-1"><small>Seller: ${sellerName}</small></p>
-                <p class="card-text fs-6"><small>Address: ${sellerAddress}</small></p>
-                <button class="btn btn-sm btn-success mt-2" onclick="buy(this)">Buy Now</button>
-                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="contactSeller(this)">Contact Seller</button>
-            </div>
-        </div>
-    `;
-
-            document.getElementById("productList").appendChild(card);
-
-            bootstrap.Modal.getInstance(sellModal).hide();
-
-            // Reset form
-            document.getElementById("sellerName").value = '';
-            document.getElementById("sellerContact").value = '';
-            document.getElementById("sellerAddress").value = '';
-            document.getElementById("barangayClearance").value = '';
-            document.getElementById("pName").value = '';
-            document.getElementById("pPrice").value = '';
-            document.getElementById("pDesc").value = '';
-            document.getElementById("pImage").value = '';
-            document.getElementById("payGCash").checked = false;
-            document.getElementById("payMaya").checked = false;
-            document.getElementById("payCash").checked = false;
+            emptyState.style.display =
+                productList.children.length === 0 ? "block" : "none";
         }
 
-        // Buy Now modal
-        function buy(btn) {
-            currentProduct = btn.closest(".col-md-4");
-            const cardBody = currentProduct.querySelector(".card-body");
+        /* =========================
+           ADD PRODUCT
+        ========================= */
+        function addProduct() {
+            const sellerName = sellerNameInput.value.trim();
+            const sellerContact = sellerContactInput.value.trim();
+            const sellerAddress = sellerAddressInput.value.trim();
 
-            const name = cardBody.querySelector("h5").innerText;
-            const product = products.find(p => p.name === name);
+            const name = pName.value.trim();
+            const price = pPrice.value;
+            const desc = pDesc.value.trim();
+            const imageFile = pImage.files[0];
 
-            // Populate payment options
-            const select = document.getElementById("buyerPayment");
-            select.innerHTML = '';
+            const payments = [];
+            if (payGCash.checked) payments.push("GCash");
+            if (payMaya.checked) payments.push("Maya");
+            if (payCash.checked) payments.push("Cash on Delivery");
+
+            if (!sellerName || !name || !price || payments.length === 0) {
+                alert("Please complete required fields.");
+                return;
+            }
+
+            const product = {
+                id: Date.now(),
+                sellerName,
+                sellerContact,
+                sellerAddress,
+                name,
+                price,
+                desc,
+                imageFile,
+                payments
+            };
+
+            products.push(product);
+            renderProduct(product);
+
+            bootstrap.Modal.getInstance(document.getElementById("sellModal")).hide();
+            resetSellForm();
+            updateMarketplaceState();
+        }
+
+        /* =========================
+           RENDER PRODUCT CARD
+        ========================= */
+        function renderProduct(product) {
+            const col = document.createElement("div");
+            col.className = "col-md-4 mb-3";
+            col.dataset.id = product.id;
+
+            const imgHTML = product.imageFile
+                ? `<img src="${URL.createObjectURL(product.imageFile)}" class="card-img-top mb-2">`
+                : "";
+
+            col.innerHTML = `
+            <div class="card h-100">
+                ${imgHTML}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="fw-bold fs-4">${product.name}</h5>
+                    <p class="fs-6 mb-1">${product.desc}</p>
+                    <p class="fs-5 mb-1"><strong>₱${product.price}</strong></p>
+                    <p class="fs-6 mb-1"><small>Seller: ${product.sellerName}</small></p>
+                    <p class="fs-6"><small>Address: ${product.sellerAddress}</small></p>
+
+                    <div class="mt-auto">
+                        <button class="btn btn-sm btn-success mt-2" onclick="buyProduct(${product.id})">
+                            Buy Now
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="contactSeller(${product.id})">
+                            Contact Seller
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            productList.appendChild(col);
+        }
+
+        /* =========================
+           BUY PRODUCT
+        ========================= */
+        function buyProduct(id) {
+            const product = products.find(p => p.id === id);
+            currentProductEl = document.querySelector(`[data-id="${id}"]`);
+
+            const select = buyerPayment;
+            select.innerHTML = "";
+
             product.payments.forEach(method => {
                 const opt = document.createElement("option");
                 opt.value = method;
-                opt.text = method;
+                opt.textContent = method;
                 select.appendChild(opt);
             });
 
             new bootstrap.Modal(buyModal).show();
         }
 
-        // Complete purchase
         function completePurchase() {
-            if (currentProduct) currentProduct.remove();
+            if (!currentProductEl) return;
+
+            const id = Number(currentProductEl.dataset.id);
+            products = products.filter(p => p.id !== id);
+
+            currentProductEl.remove();
+            currentProductEl = null;
+
             bootstrap.Modal.getInstance(buyModal).hide();
+            updateMarketplaceState();
             alert("Thank you for purchasing!");
         }
 
-        // Contact Seller modal
-        function contactSeller(btn) {
-            const cardBody = btn.closest(".card-body");
-            const productName = cardBody.querySelector("h5").innerText;
-            const product = products.find(p => p.name === productName);
+        /* =========================
+           CONTACT SELLER
+        ========================= */
+        function contactSeller(id) {
+            const product = products.find(p => p.id === id);
 
-            if (product) {
-                const infoEl = document.getElementById("chatSellerInfo");
-                infoEl.innerHTML = `
+            chatSellerInfo.innerHTML = `
             <strong>Seller:</strong> ${product.sellerName}<br>
             <strong>Contact:</strong> ${product.sellerContact}<br>
             <strong>Product:</strong> ${product.name}<br>
             <strong>Address:</strong> ${product.sellerAddress}<br>
-            <strong>Payment Methods:</strong> ${product.payments.join(', ')}
+            <strong>Payment Methods:</strong> ${product.payments.join(", ")}
         `;
-            }
 
-            new bootstrap.Modal(document.getElementById('chatModal')).show();
+            new bootstrap.Modal(chatModal).show();
         }
 
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.style.backgroundColor = 'rgba(255,255,255,0.8)'; // slightly transparent
-                navbar.classList.add('shadow-sm');
-            } else {
-                navbar.style.backgroundColor = 'rgba(255,255,255,1)'; // full opaque
-                navbar.classList.remove('shadow-sm');
-            }
+        /* =========================
+           RESET SELL FORM
+        ========================= */
+        function resetSellForm() {
+            sellerNameInput.value = "";
+            sellerContactInput.value = "";
+            sellerAddressInput.value = "";
+            barangayClearance.value = "";
+            pName.value = "";
+            pPrice.value = "";
+            pDesc.value = "";
+            pImage.value = "";
+            payGCash.checked = false;
+            payMaya.checked = false;
+            payCash.checked = false;
+        }
+
+        /* =========================
+           NAVBAR SCROLL EFFECT
+        ========================= */
+        const navbar = document.getElementById("navbar");
+        window.addEventListener("scroll", () => {
+            navbar.style.backgroundColor =
+                window.scrollY > 50 ? "rgba(255,255,255,0.9)" : "#fff";
+            navbar.classList.toggle("shadow-sm", window.scrollY > 50);
         });
 
+        /* =========================
+           INITIAL STATE
+        ========================= */
+        document.addEventListener("DOMContentLoaded", updateMarketplaceState);
     </script>
+
 
 
 </body>
