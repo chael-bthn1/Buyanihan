@@ -519,13 +519,20 @@
                     <!-- Seller info -->
                     <p id="chatSellerInfo" class="mb-2 text-muted fs-6"></p>
 
+                    <!-- Chat messages -->
+                    <div id="chatMessages" class="mb-2"
+                        style="max-height:200px; overflow-y:auto; border:1px solid #ddd; padding:5px; border-radius:5px;">
+                        <!-- Messages will appear here -->
+                    </div>
+
                     <!-- Message box -->
-                    <textarea class="form-control mb-2" placeholder="Type message..."></textarea>
-                    <button class="btn btn-secondary w-100">Send</button>
+                    <textarea id="chatMessageInput" class="form-control mb-2" placeholder="Type message..."></textarea>
+                    <button class="btn btn-secondary w-100" id="sendChatBtn">Send</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- LOGIN MODAL -->
     <div class="modal fade" id="loginModal" tabindex="-1">
@@ -1023,6 +1030,27 @@
         document.addEventListener("DOMContentLoaded", () => {
             updateNavbar();
         });
+
+        document.getElementById("sendChatBtn").addEventListener("click", () => {
+            const input = document.getElementById("chatMessageInput");
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const chatMessages = document.getElementById("chatMessages");
+
+            // Append message
+            const msgEl = document.createElement("div");
+            msgEl.className = "mb-1";
+            msgEl.innerHTML = `<strong>You:</strong> ${msg}`;
+            chatMessages.appendChild(msgEl);
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Clear input
+            input.value = "";
+        });
+
 
     </script>
 
