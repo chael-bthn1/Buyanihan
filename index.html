@@ -487,6 +487,30 @@
                         <label class="form-check-label" for="payCash">Cash on Delivery</label>
                     </div>
 
+                    <!-- Logistics Options -->
+                    <label class="form-label mt-3">Available Logistics</label>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="Lalamove" id="logLalamove">
+                        <label class="form-check-label" for="logLalamove">Lalamove</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="Grab Express" id="logGrab">
+                        <label class="form-check-label" for="logGrab">Grab Express</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="J&T" id="logJT">
+                        <label class="form-check-label" for="logJT">J&T Express</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="Meet-up" id="logMeetup">
+                        <label class="form-check-label" for="logMeetup">Meet-up</label>
+                    </div>
+
+
                     <!-- Terms and Conditions -->
                     <div class="mt-3 p-3 border rounded bg-light">
                         <h6 class="fw-bold">Terms & Conditions</h6>
@@ -506,6 +530,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- CHAT MODAL -->
     <div class="modal fade" id="chatModal">
@@ -586,6 +611,8 @@
                 <div class="modal-body">
                     <input id="regName" type="text" class="form-control mb-3" placeholder="Full Name" required>
 
+                    <input id="regAddress" type="text" class="form-control mb-3" placeholder="Address" required>
+
                     <input id="regEmail" type="email" class="form-control mb-3" placeholder="Email" required>
 
                     <input id="regPassword" type="password" class="form-control mb-3" placeholder="Password" required>
@@ -655,12 +682,15 @@
 
     <script>
         /* =========================
-   GLOBAL STATE
-========================= */
+           GLOBAL STATE
+        ========================= */
         let products = [];
         let cart = [];
-        let currentProductEl = null;
 
+        /* =========================
+           ELEMENT REFERENCES
+        ========================= */
+        // Sell modal inputs
         const sellerNameInput = document.getElementById("sellerName");
         const sellerContactInput = document.getElementById("sellerContact");
         const sellerAddressInput = document.getElementById("sellerAddress");
@@ -668,32 +698,59 @@
         const pPrice = document.getElementById("pPrice");
         const pDesc = document.getElementById("pDesc");
         const pImage = document.getElementById("pImage");
+
+        // Payment checkboxes
         const payGCash = document.getElementById("payGCash");
         const payMaya = document.getElementById("payMaya");
         const payCash = document.getElementById("payCash");
 
+        // Logistics checkboxes
+        const logLalamove = document.getElementById("logLalamove");
+        const logGrab = document.getElementById("logGrab");
+        const logJT = document.getElementById("logJT");
+        const logMeetup = document.getElementById("logMeetup");
+
+        // UI
         const productList = document.getElementById("productList");
         const emptyMarketplace = document.getElementById("emptyMarketplace");
         const navbar = document.getElementById("navbar");
-        const buyerPayment = document.getElementById("buyerPayment");
-        const chatSellerInfo = document.getElementById("chatSellerInfo");
 
+        /* =========================
+           AUTH HELPERS
+        ========================= */
         function getUser() {
             return JSON.parse(localStorage.getItem("loggedInUser"));
+        }
+
+        function updateNavbar() {
+            const loginBtn = document.getElementById("loginBtn");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            if (getUser()) {
+                loginBtn.style.display = "none";
+                logoutBtn.classList.remove("d-none");
+            } else {
+                loginBtn.style.display = "block";
+                logoutBtn.classList.add("d-none");
+            }
         }
 
         /* =========================
            MARKETPLACE STATE
         ========================= */
         function updateMarketplaceState() {
-            emptyMarketplace.style.display = productList.children.length === 0 ? "block" : "none";
+            emptyMarketplace.style.display =
+                productList.children.length === 0 ? "block" : "none";
         }
 
         /* =========================
            ADD PRODUCT
         ========================= */
         function addProduct() {
-            if (!getUser()) return alert("Please login to sell items.");
+            if (!getUser()) {
+                alert("Please login to sell items.");
+                return;
+            }
 
             const sellerName = sellerNameInput.value.trim();
             const sellerContact = sellerContactInput.value.trim();
@@ -708,8 +765,24 @@
             if (payMaya.checked) payments.push("Maya");
             if (payCash.checked) payments.push("Cash on Delivery");
 
-            if (!sellerName || !name || !price || payments.length === 0)
-                return alert("Please complete required fields.");
+            const logistics = [];
+            if (logLalamove.checked) logistics.push("Lalamove");
+            if (logGrab.checked) logistics.push("Grab Express");
+            if (logJT.checked) logistics.push("J&T Express");
+            if (logMeetup.checked) logistics.push("Meet-up");
+
+            if (
+                !sellerName ||
+                !sellerContact ||
+                !sellerAddress ||
+                !name ||
+                !price ||
+                payments.length === 0 ||
+                logistics.length === 0
+            ) {
+                alert("Please complete all required fields.");
+                return;
+            }
 
             const product = {
                 id: Date.now(),
@@ -720,14 +793,19 @@
                 price,
                 desc,
                 payments,
-                imageFile,
-                imageURL: imageFile ? URL.createObjectURL(imageFile) : null // <--- store permanent URL
+                logistics,
+                imageURL: imageFile ? URL.createObjectURL(imageFile) : null
             };
 
             products.push(product);
             renderProduct(product);
 
-            bootstrap.Modal.getInstance(document.getElementById("sellModal")).hide();
+            alert("Product listed successfully!");
+
+            bootstrap.Modal.getInstance(
+                document.getElementById("sellModal")
+            ).hide();
+
             resetSellForm();
             updateMarketplaceState();
         }
@@ -740,172 +818,151 @@
             col.className = "col-md-4 mb-3";
             col.dataset.id = product.id;
 
-            const imgHTML = product.imageURL
-                ? `<img src="${product.imageURL}" class="card-img-top mb-2">`
-                : "";
-
-
             col.innerHTML = `
-    <div class="card h-100">
-        ${imgHTML}
-        <div class="card-body d-flex flex-column">
-            <h5 class="fw-bold fs-4">${product.name}</h5>
-            <p class="fs-6 mb-1">${product.desc}</p>
-            <p class="fs-5 mb-1"><strong>₱${product.price}</strong></p>
-            <p class="fs-6 mb-1"><small>Seller: ${product.sellerName}</small></p>
-            <p class="fs-6"><small>Address: ${product.sellerAddress}</small></p>
+        <div class="card h-100">
+            ${product.imageURL ? `<img src="${product.imageURL}" class="card-img-top">` : ""}
+            <div class="card-body d-flex flex-column">
+                <h5 class="fw-bold">${product.name}</h5>
+                <p>${product.desc}</p>
+                <p><strong>₱${product.price}</strong></p>
+                <small>Seller: ${product.sellerName}</small>
+                <small>Address: ${product.sellerAddress}</small>
 
-            <div class="mt-auto">
-                <button class="btn btn-sm btn-primary mt-2" onclick="addToCart(${product.id})">
-                    Add to Cart
-                </button>
-                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="contactSeller(${product.id})">
-                    Contact Seller
-                </button>
+                <div class="mt-auto">
+                    <button class="btn btn-sm btn-primary mt-2"
+                        onclick="addToCart(${product.id})">Add to Cart</button>
+                    <button class="btn btn-sm btn-outline-secondary mt-2"
+                        onclick="contactSeller(${product.id})">Contact Seller</button>
+                </div>
             </div>
         </div>
-    </div>
     `;
 
             productList.appendChild(col);
         }
 
         /* =========================
-   CART FUNCTIONS
-========================= */
-
-        /* Update cart badge count */
+           CART
+        ========================= */
         function updateCartCount() {
             document.getElementById("cartCount").textContent = cart.length;
         }
 
-        /* Add product to cart */
         function addToCart(id) {
-            const user = getUser();
-            if (!user) {
-                alert("Please login to add items to your cart.");
+            if (!getUser()) {
+                alert("Please login to add items to cart.");
+                return;
+            }
+
+            if (cart.some(item => item.id === id)) {
+                alert("Item already in cart.");
                 return;
             }
 
             const product = products.find(p => p.id === id);
             if (!product) return;
 
-            // Prevent duplicates in cart
-            if (cart.some(item => item.id === id)) {
-                alert(`${product.name} is already in your cart.`);
-                return;
-            }
+            cart.push({ ...product });
+            updateCartCount();
+            renderCart();
 
-            // Push a copy of the product
-            const productCopy = { ...product };
-            cart.push(productCopy);
-
-            updateCartCount();  // update badge
-            renderCart();       // update cart DOM
-
-            alert(`${product.name} added to cart!`);
+            alert("Item successfully added to cart!");
         }
 
-        /* Remove item by id from cart */
         function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id); // remove exact item
+            cart = cart.filter(item => item.id !== id);
             updateCartCount();
             renderCart();
         }
 
-        /* Render cart modal */
         function renderCart() {
-            const cartItemsEl = document.getElementById("cartItems");
+            const cartItems = document.getElementById("cartItems");
             const emptyText = document.getElementById("emptyCartText");
+            cartItems.innerHTML = "";
 
-            cartItemsEl.innerHTML = ""; // clear previous items
-
-            if (cart.length === 0) {
+            if (!cart.length) {
                 emptyText.style.display = "block";
                 document.getElementById("cartTotal").textContent = "0.00";
                 return;
             }
 
-            emptyText.style.display = "none"; // hide "Your cart is empty"
-
+            emptyText.style.display = "none";
             let total = 0;
 
             cart.forEach(item => {
-                const price = parseFloat(item.price) || 0;
-                total += price;
+                total += item.price;
 
-                const imgHTML = item.imageURL
-                    ? `<img src="${item.imageURL}" style="height:40px;width:40px;object-fit:cover;margin-right:10px;">`
-                    : "";
+                const el = document.createElement("div");
+                el.className = "border-bottom pb-2 mb-3 d-flex justify-content-between";
 
-                // Create a dropdown for payment options
-                let paymentOptionsHTML = `<select class="form-select form-select-sm mb-1">`;
-                item.payments.forEach(payment => {
-                    paymentOptionsHTML += `<option value="${payment}">${payment}</option>`;
-                });
-                paymentOptionsHTML += `</select>`;
+                el.innerHTML = `
+                <div class="d-flex gap-2">
+                    ${item.imageURL
+                        ? `<img src="${item.imageURL}" 
+                                    style="width:60px; height:60px; object-fit:cover; border-radius:6px;">`
+                        : ""
+                    }
 
-                const itemEl = document.createElement("div");
-                itemEl.className = "d-flex justify-content-between align-items-start mb-2 border-bottom pb-2";
-                itemEl.innerHTML = `
-            <div class="d-flex align-items-start">
-                ${imgHTML}
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <small>₱${price.toFixed(2)}</small><br>
-                    ${paymentOptionsHTML}
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        ₱${item.price.toFixed(2)}
+
+                        <select class="form-select form-select-sm mt-1">
+                            ${item.payments.map(p => `<option>${p}</option>`).join("")}
+                        </select>
+
+                        <select class="form-select form-select-sm mt-1">
+                            ${item.logistics.map(l => `<option>${l}</option>`).join("")}
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <button class="btn btn-sm btn-danger mt-2" onclick="removeFromCart(${item.id})">&times;</button>
-        `;
-                cartItemsEl.appendChild(itemEl);
+
+                <button class="btn btn-sm btn-danger"
+                    onclick="removeFromCart(${item.id})">&times;</button>
+            `;
+
+
+                cartItems.appendChild(el);
             });
 
             document.getElementById("cartTotal").textContent = total.toFixed(2);
         }
 
-
-
-        /* Checkout cart */
         function checkoutCart() {
-            if (!cart.length) {
-                alert("Your cart is empty!");
-                return;
-            }
+            if (!cart.length) return alert("Cart is empty!");
 
-            // Remove items from marketplace DOM and products array
             cart.forEach(item => {
                 const el = document.querySelector(`[data-id="${item.id}"]`);
                 if (el) el.remove();
                 products = products.filter(p => p.id !== item.id);
             });
 
-            const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0).toFixed(2);
-
             cart = [];
             updateCartCount();
             renderCart();
-            bootstrap.Modal.getInstance(document.getElementById("cartModal")).hide();
             updateMarketplaceState();
-            alert(`Thank you for your purchase! Total: ₱${total}`);
+
+            bootstrap.Modal.getInstance(
+                document.getElementById("cartModal")
+            ).hide();
+
+            alert("Checkout successful!");
         }
 
-        /* Re-render cart whenever modal opens */
-        document.getElementById("cartModal").addEventListener("show.bs.modal", renderCart);
-
         /* =========================
-           CONTACT SELLER
+           CHAT
         ========================= */
         function contactSeller(id) {
             const product = products.find(p => p.id === id);
-            chatSellerInfo.innerHTML = `
+            document.getElementById("chatSellerInfo").innerHTML = `
         <strong>Seller:</strong> ${product.sellerName}<br>
         <strong>Contact:</strong> ${product.sellerContact}<br>
-        <strong>Product:</strong> ${product.name}<br>
-        <strong>Address:</strong> ${product.sellerAddress}<br>
-        <strong>Payment:</strong> ${product.payments.join(", ")}
+        <strong>Product:</strong> ${product.name}
     `;
-            new bootstrap.Modal(chatModal).show();
+
+            new bootstrap.Modal(
+                document.getElementById("chatModal")
+            ).show();
         }
 
         /* =========================
@@ -919,38 +976,72 @@
             pPrice.value = "";
             pDesc.value = "";
             pImage.value = "";
+
             payGCash.checked = payMaya.checked = payCash.checked = false;
+            logLalamove.checked = logGrab.checked = logJT.checked = logMeetup.checked = false;
         }
 
         /* =========================
-           NAVBAR LOGIN STATE
+           LOGIN / REGISTER / LOGOUT
         ========================= */
-        function updateNavbar() {
-            const user = getUser();
-            const loginBtn = document.getElementById("loginBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
+        function login() {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value.trim();
+            if (!email || !password) return alert("Missing credentials");
 
-            if (user) {
-                loginBtn.style.display = "none";
-                logoutBtn.classList.remove("d-none");
-            } else {
-                loginBtn.style.display = "block";
-                logoutBtn.classList.add("d-none");
-            }
+            localStorage.setItem("loggedInUser", JSON.stringify({ email }));
+            updateNavbar();
+            bootstrap.Modal.getInstance(loginModal).hide();
         }
 
+        function register() {
+            const user = {
+                name: regName.value.trim(),
+                address: regAddress.value.trim(),
+                email: regEmail.value.trim()
+            };
+
+            if (!user.name || !user.address || !user.email || !regPassword.value) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
+            updateNavbar();
+
+            bootstrap.Modal.getInstance(
+                document.getElementById("registerModal")
+            ).hide();
+
+            alert("Account registered successfully! You are now logged in.");
+        }
+
+
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            updateNavbar();
+
+            alert("You have been logged out successfully.");
+        }
+
+
         /* =========================
-           EVENT LISTENERS
+           CHAT SEND BUTTON
         ========================= */
         document.addEventListener("DOMContentLoaded", () => {
             updateNavbar();
             updateMarketplaceState();
-        });
 
-        document.getElementById("cartModal").addEventListener("show.bs.modal", renderCart);
+            document.getElementById("sendChatBtn").addEventListener("click", () => {
+                const input = document.getElementById("chatMessageInput");
+                const msg = input.value.trim();
+                if (!msg) return;
 
-        window.addEventListener("scroll", () => {
-            navbar.classList.toggle("shadow-sm", window.scrollY > 50);
+                const box = document.getElementById("chatMessages");
+                box.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
+                input.value = "";
+                box.scrollTop = box.scrollHeight;
+            });
         });
 
         function openSellModal() {
@@ -959,100 +1050,11 @@
                 return;
             }
 
-            const sellModalEl = document.getElementById("sellModal");
-            const sellModal = new bootstrap.Modal(sellModalEl);
-            sellModal.show();
+            new bootstrap.Modal(document.getElementById("sellModal")).show();
         }
-
-        /* =========================
-   LOGIN / REGISTER / LOGOUT
-========================= */
-        function getUser() {
-            return JSON.parse(localStorage.getItem("loggedInUser"));
-        }
-
-        function updateNavbar() {
-            const user = getUser();
-            const loginBtn = document.getElementById("loginBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
-
-            if (user) {
-                loginBtn.style.display = "none";
-                logoutBtn.classList.remove("d-none");
-            } else {
-                loginBtn.style.display = "block";
-                logoutBtn.classList.add("d-none");
-            }
-        }
-
-        /* Login */
-        function login() {
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
-
-            if (!email || !password) return alert("Please enter email and password.");
-
-            // Demo: store email as logged-in user
-            const user = { email };
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-            updateNavbar();
-            bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide();
-            alert("Logged in successfully!");
-        }
-
-        /* Register */
-        function register() {
-            const name = document.getElementById("regName").value.trim();
-            const email = document.getElementById("regEmail").value.trim();
-            const password = document.getElementById("regPassword").value.trim();
-
-            if (!name || !email || !password) return alert("Please fill in all fields.");
-
-            const user = { name, email };
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-            updateNavbar();
-            bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide();
-            alert("Registered and logged in successfully!");
-        }
-
-        /* Logout */
-        function logout() {
-            localStorage.removeItem("loggedInUser");
-            updateNavbar();
-            alert("Logged out successfully!");
-        }
-
-        /* =========================
-           INITIALIZE NAVBAR ON PAGE LOAD
-        ========================= */
-        document.addEventListener("DOMContentLoaded", () => {
-            updateNavbar();
-        });
-
-        document.getElementById("sendChatBtn").addEventListener("click", () => {
-            const input = document.getElementById("chatMessageInput");
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const chatMessages = document.getElementById("chatMessages");
-
-            // Append message
-            const msgEl = document.createElement("div");
-            msgEl.className = "mb-1";
-            msgEl.innerHTML = `<strong>You:</strong> ${msg}`;
-            chatMessages.appendChild(msgEl);
-
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Clear input
-            input.value = "";
-        });
-
 
     </script>
+
 
 </body>
 
