@@ -6,7 +6,6 @@
     <title>Buyanihan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -33,14 +32,12 @@
             padding: 80px 0;
         }
 
-        /* HERO */
         .hero {
             background: linear-gradient(135deg,
                     var(--color-1),
                     var(--color-4));
         }
 
-        /* NAVBAR: Solid white */
         #navbar {
             background-color: #fff;
             /* always solid white */
@@ -50,7 +47,6 @@
             /* remove blur */
             -webkit-backdrop-filter: none;
         }
-
 
         .navbar-brand {
             color: var(--color-5) !important;
@@ -64,7 +60,6 @@
             color: var(--color-5) !important;
         }
 
-        /* BUTTON OVERRIDES */
         .btn-success {
             background-color: var(--color-5);
             border-color: var(--color-5);
@@ -95,7 +90,6 @@
             color: #fff;
         }
 
-        /* MARKETPLACE */
         #marketplace {
             background-color: var(--color-1);
         }
@@ -114,19 +108,16 @@
             color: var(--color-5);
         }
 
-        /* FORMS */
         .form-control:focus {
             border-color: var(--color-5);
             box-shadow: 0 0 0 0.2rem rgba(87, 121, 37, 0.25);
         }
 
-        /* SECTION HEADINGS */
         h1,
         h2 {
             color: var(--color-5);
         }
 
-        /* FOOTER-LIKE SECTIONS */
         #contact {
             background-color: var(--color-4);
         }
@@ -134,40 +125,31 @@
         #marketplace,
         #contact {
             background-color: #fff;
-            /* same as navbar/header */
             color: var(--color-3);
-            /* dark text for readability */
         }
 
         #team {
             background-color: var(--color-4);
-            /* tan */
             color: var(--color-3);
         }
     </style>
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
     <nav id="navbar" class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm">
         <div class="container">
 
-            <!-- LOGO -->
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <img src="logo.png" alt="Buyanihan Logo" style="height: 70px;">
             </a>
 
-            <!-- TOGGLER -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- NAV LINKS -->
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-                    <!-- CART ICON -->
                     <li class="nav-item me-3">
                         <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
                             data-bs-target="#cartModal">
@@ -179,7 +161,6 @@
                         </a>
                     </li>
 
-                    <!-- NAV LINKS -->
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="#home">Home</a>
                     </li>
@@ -196,7 +177,6 @@
                         <a class="nav-link fs-5" href="#contact">Contact</a>
                     </li>
 
-                    <!-- LOGIN -->
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"
                             id="loginBtn">
@@ -204,7 +184,6 @@
                         </a>
                     </li>
 
-                    <!-- LOGOUT -->
                     <li class="nav-item d-none" id="logoutBtn">
                         <a class="nav-link fs-5" href="#" onclick="logout()">
                             Logout
@@ -217,18 +196,14 @@
         </div>
     </nav>
 
-    <!-- SECTION 1: INTRO -->
     <section id="home" class="hero position-relative min-vh-100 d-flex align-items-center justify-content-center">
 
-        <!-- VIDEO BACKGROUND -->
         <video autoplay muted loop playsinline class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
             <source src="section1video.mp4" type="video/mp4">
         </video>
 
-        <!-- DARK OVERLAY -->
         <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
 
-        <!-- CONTENT -->
         <div class="container position-relative text-center">
             <h1 class="display-4 fw-bold text-white" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">
                 Support Local. Buy Local.
@@ -242,15 +217,13 @@
 
     </section>
 
-    <!-- SECTION 3: ABOUT -->
     <section id="about" class="p-0 m-0">
         <div class="container-fluid">
             <div class="row align-items-stretch">
-                <!-- LEFT COLUMN: Text -->
+
                 <div class="col-md-6 d-flex align-items-center bg-light">
                     <div class="p-5">
 
-                        <!-- Accent Line -->
                         <div class="mb-3" style="width: 60px; height: 4px; background-color: var(--color-5);"></div>
 
                         <h2 class="fw-bold display-6 mb-3">About Buyanihan</h2>
@@ -265,7 +238,6 @@
                             fosters trust between buyers and sellers, and supports sustainable local commerce.
                         </p>
 
-                        <!-- Feature Highlights -->
                         <div class="row mt-4">
                             <div class="col-6 mb-3">
                                 <h6 class="fw-bold mb-1 text-success">✔ Verified Sellers</h6>
@@ -288,7 +260,6 @@
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN: Full-height Image -->
                 <div class="col-md-6 p-0">
                     <img src="aboutimage.png" class="w-100 h-100" style="object-fit: cover;" alt="About Buyanihan">
                 </div>
@@ -296,29 +267,41 @@
         </div>
     </section>
 
-    <!-- SECTION 4: MARKETPLACE -->
     <section id="marketplace" class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">Marketplace</h2>
 
-            <!-- EMPTY STATE -->
+            <div class="row mb-4">
+                <div class="col-md-8 mb-2">
+                    <input id="searchInput" class="form-control" placeholder="Search products or sellers...">
+                </div>
+
+                <div class="col-md-4">
+                    <select id="priceFilter" class="form-select">
+                        <option value="">All Prices</option>
+                        <option value="low">Below ₱500</option>
+                        <option value="mid">₱500 - ₱1000</option>
+                        <option value="high">Above ₱1000</option>
+                    </select>
+                </div>
+            </div>
+
+
             <div id="emptyMarketplace" class="text-center py-5">
                 <h4 class="fw-bold text-muted">The Marketplace is Empty</h4>
                 <p class="text-muted">Be the first to list a product!</p>
             </div>
 
-            <!-- PRODUCT LIST -->
             <div class="row" id="productList"></div>
         </div>
     </section>
 
-    <!-- SECTION 5: TEAM -->
     <section id="team" class="py-5">
         <div class="container text-center">
             <h2 class="fw-bold mb-4">Meet Our Team</h2>
 
             <div class="row justify-content-center mb-3">
-                <!-- Top: You -->
+
                 <div class="col-6 col-md-3 mb-4">
                     <div class="card border-0">
                         <img src="member1.jpg" class="card-img-top rounded-circle" alt="Member 1">
@@ -332,7 +315,7 @@
             </div>
 
             <div class="row justify-content-center">
-                <!-- Row 2: 2 members -->
+
                 <div class="col-6 col-md-3 mb-4">
                     <div class="card border-0">
                         <img src="member2.jpg" class="card-img-top rounded-circle" alt="Member 2">
@@ -356,7 +339,7 @@
             </div>
 
             <div class="row justify-content-center">
-                <!-- Row 3: 2 members -->
+
                 <div class="col-6 col-md-3 mb-4">
                     <div class="card border-0">
                         <img src="member4.jpg" class="card-img-top rounded-circle" alt="Member 4">
@@ -382,7 +365,6 @@
         </div>
     </section>
 
-    <!-- SECTION 6: FEEDBACK & CONCERNS -->
     <section id="contact" class="py-5">
         <div class="container">
             <h2 class="text-center fw-bold mb-2">Feedback & Concerns</h2>
@@ -446,91 +428,100 @@
     </section>
 
     <!-- SELL MODAL -->
-    <div class="modal fade" id="sellModal">
-        <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal fade" id="sellModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
+
+                <!-- HEADER -->
                 <div class="modal-header">
                     <h5 class="modal-title">Sell on Buyanihan</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
+
+                <!-- BODY -->
                 <div class="modal-body">
-                    <!-- Seller Details -->
-                    <input id="sellerName" class="form-control mb-2" placeholder="Seller Name">
-                    <input id="sellerContact" class="form-control mb-2" placeholder="Email or Phone">
-                    <input id="sellerAddress" class="form-control mb-2" placeholder="Address">
+                    <form id="sellForm">
 
-                    <!-- Barangay Clearance -->
-                    <label class="form-label mt-2">Barangay Clearance</label>
-                    <input id="barangayClearance" type="file" class="form-control mb-3" accept=".pdf,.jpg,.png">
+                        <!-- SELLER INFO -->
+                        <h6 class="fw-bold mb-2">Seller Information</h6>
+                        <input id="sellerName" class="form-control mb-2" placeholder="Seller Name" required>
+                        <input id="sellerContact" class="form-control mb-2" placeholder="Email or Phone" required>
+                        <input id="sellerAddress" class="form-control mb-3" placeholder="Address" required>
 
-                    <!-- Product Details -->
-                    <input id="pName" class="form-control mb-2" placeholder="Product Name">
-                    <input id="pPrice" class="form-control mb-2" placeholder="Price" type="number" min="0" step="0.01">
-                    <textarea id="pDesc" class="form-control mb-2" placeholder="Description"></textarea>
+                        <!-- PRODUCT INFO -->
+                        <h6 class="fw-bold mb-2">Product Details</h6>
+                        <input id="pName" class="form-control mb-2" placeholder="Product Name" required>
+                        <input id="pPrice" type="number" min="0" step="0.01" class="form-control mb-2"
+                            placeholder="Price" required>
+                        <textarea id="pDesc" class="form-control mb-2" placeholder="Description"></textarea>
 
-                    <!-- Product Image -->
-                    <label class="form-label mt-2">Product Image</label>
-                    <input id="pImage" type="file" class="form-control mb-3" accept="image/*">
+                        <!-- PRODUCT IMAGE -->
+                        <label class="form-label mt-2">Product Image</label>
+                        <input id="pImage" type="file" class="form-control mb-3" accept="image/*">
 
-                    <!-- Payment Options -->
-                    <label class="form-label">Accepted Payment Methods</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="GCash" id="payGCash">
-                        <label class="form-check-label" for="payGCash">GCash</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Maya" id="payMaya">
-                        <label class="form-check-label" for="payMaya">Maya</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Cash" id="payCash">
-                        <label class="form-check-label" for="payCash">Cash on Delivery</label>
-                    </div>
+                        <!-- PAYMENT OPTIONS -->
+                        <h6 class="fw-bold mb-2">Accepted Payment Methods</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="payGCash">
+                            <label class="form-check-label" for="payGCash">GCash</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="payMaya">
+                            <label class="form-check-label" for="payMaya">Maya</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="payCash">
+                            <label class="form-check-label" for="payCash">Cash on Delivery</label>
+                        </div>
 
-                    <!-- Logistics Options -->
-                    <label class="form-label mt-3">Available Logistics</label>
+                        <!-- LOGISTICS OPTIONS -->
+                        <h6 class="fw-bold mb-2">Available Logistics</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="logLalamove">
+                            <label class="form-check-label" for="logLalamove">Lalamove</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="logGrab">
+                            <label class="form-check-label" for="logGrab">Grab Express</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="logJT">
+                            <label class="form-check-label" for="logJT">J&T Express</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="logMeetup">
+                            <label class="form-check-label" for="logMeetup">Meet-up</label>
+                        </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Lalamove" id="logLalamove">
-                        <label class="form-check-label" for="logLalamove">Lalamove</label>
-                    </div>
+                        <!-- TERMS & CONDITIONS -->
+                        <div class="border rounded p-3 bg-light mb-3">
+                            <h6 class="fw-bold">Terms & Conditions</h6>
+                            <ul class="mb-0" style="font-size:0.9rem;">
+                                <li>We charge <strong>5%</strong> of your product price as platform revenue.</li>
+                                <li>Ensure your products are legitimate. Fraudulent items will be removed and sellers
+                                    may be banned.</li>
+                                <li>Buyanihan is not liable for scams, fake transactions, or disputes between buyers and
+                                    sellers.</li>
+                                <li>By submitting, you agree to follow all marketplace rules and maintain transparency
+                                    with buyers.</li>
+                            </ul>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Grab Express" id="logGrab">
-                        <label class="form-check-label" for="logGrab">Grab Express</label>
-                    </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label fw-semibold" for="agreeTerms">
+                                    I agree to the Terms & Conditions
+                                </label>
+                            </div>
+                        </div>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="J&T" id="logJT">
-                        <label class="form-check-label" for="logJT">J&T Express</label>
-                    </div>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Meet-up" id="logMeetup">
-                        <label class="form-check-label" for="logMeetup">Meet-up</label>
-                    </div>
-
-
-                    <!-- Terms and Conditions -->
-                    <div class="mt-3 p-3 border rounded bg-light">
-                        <h6 class="fw-bold">Terms & Conditions</h6>
-                        <ul class="mb-0" style="font-size: 0.9rem;">
-                            <li>We charge <strong>5%</strong> of your product price as platform revenue.</li>
-                            <li>Ensure your products are legitimate. Fraudulent items will be removed and sellers may be
-                                banned.</li>
-                            <li>Buyanihan is not liable for scams, fake transactions, or disputes between buyers and
-                                sellers. Always provide accurate information.</li>
-                            <li>By submitting, you agree to follow all marketplace rules and maintain transparency with
-                                buyers.</li>
-                        </ul>
-                    </div>
-
-                    <button class="btn btn-success w-100 mt-3" onclick="addProduct()">Submit</button>
+                        <!-- SUBMIT BUTTON -->
+                        <button type="submit" class="btn btn-success w-100">Submit</button>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
-
 
     <!-- CHAT MODAL -->
     <div class="modal fade" id="chatModal">
@@ -615,6 +606,31 @@
 
                     <input id="regEmail" type="email" class="form-control mb-3" placeholder="Email" required>
 
+                    <!-- Barangay Clearance -->
+                    <label class="form-label fw-semibold">Barangay Clearance</label>
+                    <input id="regBarangayClearance" type="file" class="form-control mb-3" accept=".pdf,.jpg,.png"
+                        required>
+
+                    <!-- Government ID -->
+                    <label class="form-label fw-semibold">Government ID</label>
+                    <input id="regGovID" type="file" class="form-control mb-3" accept="image/*,.pdf" required>
+
+                    <!-- Face Scan Simulation -->
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <h6 class="fw-bold mb-2">Face Scan Verification</h6>
+
+                        <video id="faceVideo" class="w-100 rounded mb-2" autoplay playsinline></video>
+
+                        <button class="btn btn-outline-secondary w-100" onclick="startFaceScan()">
+                            Start Face Scan
+                        </button>
+
+                        <small id="faceStatus" class="text-muted d-block mt-2">
+                            Not verified
+                        </small>
+                    </div>
+
+
                     <input id="regPassword" type="password" class="form-control mb-3" placeholder="Password" required>
                 </div>
 
@@ -679,382 +695,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        /* =========================
-           GLOBAL STATE
-        ========================= */
-        let products = [];
-        let cart = [];
-
-        /* =========================
-           ELEMENT REFERENCES
-        ========================= */
-        // Sell modal inputs
-        const sellerNameInput = document.getElementById("sellerName");
-        const sellerContactInput = document.getElementById("sellerContact");
-        const sellerAddressInput = document.getElementById("sellerAddress");
-        const pName = document.getElementById("pName");
-        const pPrice = document.getElementById("pPrice");
-        const pDesc = document.getElementById("pDesc");
-        const pImage = document.getElementById("pImage");
-
-        // Payment checkboxes
-        const payGCash = document.getElementById("payGCash");
-        const payMaya = document.getElementById("payMaya");
-        const payCash = document.getElementById("payCash");
-
-        // Logistics checkboxes
-        const logLalamove = document.getElementById("logLalamove");
-        const logGrab = document.getElementById("logGrab");
-        const logJT = document.getElementById("logJT");
-        const logMeetup = document.getElementById("logMeetup");
-
-        // UI
-        const productList = document.getElementById("productList");
-        const emptyMarketplace = document.getElementById("emptyMarketplace");
-        const navbar = document.getElementById("navbar");
-
-        /* =========================
-           AUTH HELPERS
-        ========================= */
-        function getUser() {
-            return JSON.parse(localStorage.getItem("loggedInUser"));
-        }
-
-        function updateNavbar() {
-            const loginBtn = document.getElementById("loginBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
-
-            if (getUser()) {
-                loginBtn.style.display = "none";
-                logoutBtn.classList.remove("d-none");
-            } else {
-                loginBtn.style.display = "block";
-                logoutBtn.classList.add("d-none");
-            }
-        }
-
-        /* =========================
-           MARKETPLACE STATE
-        ========================= */
-        function updateMarketplaceState() {
-            emptyMarketplace.style.display =
-                productList.children.length === 0 ? "block" : "none";
-        }
-
-        /* =========================
-           ADD PRODUCT
-        ========================= */
-        function addProduct() {
-            if (!getUser()) {
-                alert("Please login to sell items.");
-                return;
-            }
-
-            const sellerName = sellerNameInput.value.trim();
-            const sellerContact = sellerContactInput.value.trim();
-            const sellerAddress = sellerAddressInput.value.trim();
-            const name = pName.value.trim();
-            const price = parseFloat(pPrice.value);
-            const desc = pDesc.value.trim();
-            const imageFile = pImage.files[0];
-
-            const payments = [];
-            if (payGCash.checked) payments.push("GCash");
-            if (payMaya.checked) payments.push("Maya");
-            if (payCash.checked) payments.push("Cash on Delivery");
-
-            const logistics = [];
-            if (logLalamove.checked) logistics.push("Lalamove");
-            if (logGrab.checked) logistics.push("Grab Express");
-            if (logJT.checked) logistics.push("J&T Express");
-            if (logMeetup.checked) logistics.push("Meet-up");
-
-            if (
-                !sellerName ||
-                !sellerContact ||
-                !sellerAddress ||
-                !name ||
-                !price ||
-                payments.length === 0 ||
-                logistics.length === 0
-            ) {
-                alert("Please complete all required fields.");
-                return;
-            }
-
-            const product = {
-                id: Date.now(),
-                sellerName,
-                sellerContact,
-                sellerAddress,
-                name,
-                price,
-                desc,
-                payments,
-                logistics,
-                imageURL: imageFile ? URL.createObjectURL(imageFile) : null
-            };
-
-            products.push(product);
-            renderProduct(product);
-
-            alert("Product listed successfully!");
-
-            bootstrap.Modal.getInstance(
-                document.getElementById("sellModal")
-            ).hide();
-
-            resetSellForm();
-            updateMarketplaceState();
-        }
-
-        /* =========================
-           RENDER PRODUCT
-        ========================= */
-        function renderProduct(product) {
-            const col = document.createElement("div");
-            col.className = "col-md-4 mb-3";
-            col.dataset.id = product.id;
-
-            col.innerHTML = `
-        <div class="card h-100">
-            ${product.imageURL ? `<img src="${product.imageURL}" class="card-img-top">` : ""}
-            <div class="card-body d-flex flex-column">
-                <h5 class="fw-bold">${product.name}</h5>
-                <p>${product.desc}</p>
-                <p><strong>₱${product.price}</strong></p>
-                <small>Seller: ${product.sellerName}</small>
-                <small>Address: ${product.sellerAddress}</small>
-
-                <div class="mt-auto">
-                    <button class="btn btn-sm btn-primary mt-2"
-                        onclick="addToCart(${product.id})">Add to Cart</button>
-                    <button class="btn btn-sm btn-outline-secondary mt-2"
-                        onclick="contactSeller(${product.id})">Contact Seller</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-            productList.appendChild(col);
-        }
-
-        /* =========================
-           CART
-        ========================= */
-        function updateCartCount() {
-            document.getElementById("cartCount").textContent = cart.length;
-        }
-
-        function addToCart(id) {
-            if (!getUser()) {
-                alert("Please login to add items to cart.");
-                return;
-            }
-
-            if (cart.some(item => item.id === id)) {
-                alert("Item already in cart.");
-                return;
-            }
-
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
-            cart.push({ ...product });
-            updateCartCount();
-            renderCart();
-
-            alert("Item successfully added to cart!");
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartCount();
-            renderCart();
-        }
-
-        function renderCart() {
-            const cartItems = document.getElementById("cartItems");
-            const emptyText = document.getElementById("emptyCartText");
-            cartItems.innerHTML = "";
-
-            if (!cart.length) {
-                emptyText.style.display = "block";
-                document.getElementById("cartTotal").textContent = "0.00";
-                return;
-            }
-
-            emptyText.style.display = "none";
-            let total = 0;
-
-            cart.forEach(item => {
-                total += item.price;
-
-                const el = document.createElement("div");
-                el.className = "border-bottom pb-2 mb-3 d-flex justify-content-between";
-
-                el.innerHTML = `
-                <div class="d-flex gap-2">
-                    ${item.imageURL
-                        ? `<img src="${item.imageURL}" 
-                                    style="width:60px; height:60px; object-fit:cover; border-radius:6px;">`
-                        : ""
-                    }
-
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        ₱${item.price.toFixed(2)}
-
-                        <select class="form-select form-select-sm mt-1">
-                            ${item.payments.map(p => `<option>${p}</option>`).join("")}
-                        </select>
-
-                        <select class="form-select form-select-sm mt-1">
-                            ${item.logistics.map(l => `<option>${l}</option>`).join("")}
-                        </select>
-                    </div>
-                </div>
-
-                <button class="btn btn-sm btn-danger"
-                    onclick="removeFromCart(${item.id})">&times;</button>
-            `;
-
-
-                cartItems.appendChild(el);
-            });
-
-            document.getElementById("cartTotal").textContent = total.toFixed(2);
-        }
-
-        function checkoutCart() {
-            if (!cart.length) return alert("Cart is empty!");
-
-            cart.forEach(item => {
-                const el = document.querySelector(`[data-id="${item.id}"]`);
-                if (el) el.remove();
-                products = products.filter(p => p.id !== item.id);
-            });
-
-            cart = [];
-            updateCartCount();
-            renderCart();
-            updateMarketplaceState();
-
-            bootstrap.Modal.getInstance(
-                document.getElementById("cartModal")
-            ).hide();
-
-            alert("Checkout successful!");
-        }
-
-        /* =========================
-           CHAT
-        ========================= */
-        function contactSeller(id) {
-            const product = products.find(p => p.id === id);
-            document.getElementById("chatSellerInfo").innerHTML = `
-        <strong>Seller:</strong> ${product.sellerName}<br>
-        <strong>Contact:</strong> ${product.sellerContact}<br>
-        <strong>Product:</strong> ${product.name}
-    `;
-
-            new bootstrap.Modal(
-                document.getElementById("chatModal")
-            ).show();
-        }
-
-        /* =========================
-           RESET SELL FORM
-        ========================= */
-        function resetSellForm() {
-            sellerNameInput.value = "";
-            sellerContactInput.value = "";
-            sellerAddressInput.value = "";
-            pName.value = "";
-            pPrice.value = "";
-            pDesc.value = "";
-            pImage.value = "";
-
-            payGCash.checked = payMaya.checked = payCash.checked = false;
-            logLalamove.checked = logGrab.checked = logJT.checked = logMeetup.checked = false;
-        }
-
-        /* =========================
-           LOGIN / REGISTER / LOGOUT
-        ========================= */
-        function login() {
-            const email = loginEmail.value.trim();
-            const password = loginPassword.value.trim();
-            if (!email || !password) return alert("Missing credentials");
-
-            localStorage.setItem("loggedInUser", JSON.stringify({ email }));
-            updateNavbar();
-            bootstrap.Modal.getInstance(loginModal).hide();
-        }
-
-        function register() {
-            const user = {
-                name: regName.value.trim(),
-                address: regAddress.value.trim(),
-                email: regEmail.value.trim()
-            };
-
-            if (!user.name || !user.address || !user.email || !regPassword.value) {
-                alert("Please fill in all fields.");
-                return;
-            }
-
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-            updateNavbar();
-
-            bootstrap.Modal.getInstance(
-                document.getElementById("registerModal")
-            ).hide();
-
-            alert("Account registered successfully! You are now logged in.");
-        }
-
-
-        function logout() {
-            localStorage.removeItem("loggedInUser");
-            updateNavbar();
-
-            alert("You have been logged out successfully.");
-        }
-
-
-        /* =========================
-           CHAT SEND BUTTON
-        ========================= */
-        document.addEventListener("DOMContentLoaded", () => {
-            updateNavbar();
-            updateMarketplaceState();
-
-            document.getElementById("sendChatBtn").addEventListener("click", () => {
-                const input = document.getElementById("chatMessageInput");
-                const msg = input.value.trim();
-                if (!msg) return;
-
-                const box = document.getElementById("chatMessages");
-                box.innerHTML += `<div><strong>You:</strong> ${msg}</div>`;
-                input.value = "";
-                box.scrollTop = box.scrollHeight;
-            });
-        });
-
-        function openSellModal() {
-            if (!getUser()) {
-                alert("Please login to sell items.");
-                return;
-            }
-
-            new bootstrap.Modal(document.getElementById("sellModal")).show();
-        }
-
-    </script>
-
+    <script src="script.js"></script>
 
 </body>
 
