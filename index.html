@@ -137,28 +137,39 @@
 
 <body>
     <nav id="navbar" class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm">
-        <div class="container">
+        <div class="container d-flex align-items-center justify-content-between">
 
-            <!-- Brand -->
+            <!-- LOGO -->
             <a class="navbar-brand d-flex align-items-center" href="#home">
                 <img src="logo.png" alt="Buyanihan Logo" style="height: 70px;">
             </a>
 
-            <!-- Hamburger toggle -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- MOBILE RIGHT CONTROLS -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- CART (mobile only) -->
+                <a class="d-lg-none position-relative me-2" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+                    <img src="cart.png" alt="Cart" style="height: 30px;">
+                    <span id="cartCountMobile"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                </a>
 
-            <!-- Navbar links -->
+                <!-- HAMBURGER -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+
+            <!-- COLLAPSIBLE MENU -->
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
-                    <!-- Cart button (desktop only in nav links) -->
+                    <!-- CART (desktop only) -->
                     <li class="nav-item me-3 d-none d-lg-block">
                         <a class="nav-link position-relative" href="#" data-bs-toggle="modal"
                             data-bs-target="#cartModal">
                             <img src="cart.png" alt="Cart" style="height: 30px;">
-                            <span id="cartCount"
+                            <span id="cartCountDesktop"
                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                         </a>
                     </li>
@@ -175,22 +186,18 @@
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="#contact">Contact</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link fs-5" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"
                             id="loginBtn">Login</a>
                     </li>
+
                     <li class="nav-item d-none" id="logoutBtn">
                         <a class="nav-link fs-5" href="#" onclick="logout()">Logout</a>
                     </li>
+
                 </ul>
             </div>
-
-            <!-- Cart button for mobile (always visible outside hamburger) -->
-            <a class="d-lg-none position-relative ms-2" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
-                <img src="cart.png" alt="Cart" style="height: 30px;">
-                <span id="cartCountMobile"
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
-            </a>
 
         </div>
     </nav>
