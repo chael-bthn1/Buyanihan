@@ -196,9 +196,12 @@ function renderProduct(product) {
    CART
 ===================================================== */
 function updateCartCount() {
-    const badge = $("cartCount");
-    if (badge) badge.textContent = cart.length;
+    const badgeMobile = $("cartCountMobile");
+    const badgeDesktop = $("cartCountDesktop");
+    if (badgeMobile) badgeMobile.textContent = cart.length;
+    if (badgeDesktop) badgeDesktop.textContent = cart.length;
 }
+
 
 function addToCart(id) {
     if (!requireLogin()) return;
