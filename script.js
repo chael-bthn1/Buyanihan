@@ -91,6 +91,7 @@ function addProduct() {
     // PRODUCT INFO
     const name = document.getElementById("pName").value.trim();
     const price = parseFloat(document.getElementById("pPrice").value);
+    const stock = parseInt(document.getElementById("pStock").value); // NEW: Get stock
     const desc = document.getElementById("pDesc").value.trim();
     const imageFile = document.getElementById("pImage").files[0];
 
@@ -110,7 +111,8 @@ function addProduct() {
     // TERMS & CONDITIONS
     const agreeTerms = document.getElementById("agreeTerms").checked;
 
-    if (!sellerName || !sellerContact || !sellerAddress || !name || !price || payments.length === 0 || logistics.length === 0) {
+    // Validation with stock check
+    if (!sellerName || !sellerContact || !sellerAddress || !name || !price || !stock || stock < 1 || payments.length === 0 || logistics.length === 0) {
         alert("Please complete all required fields.");
         return;
     }
@@ -128,6 +130,7 @@ function addProduct() {
         sellerAddress,
         name,
         price,
+        stock, // NEW: Add stock to product
         desc,
         payments,
         logistics,
@@ -164,11 +167,20 @@ function renderProduct(product) {
     col.className = "col-md-4 mb-4";
     col.dataset.id = product.id;
 
+    // Check if out of stock
+    const isOutOfStock = product.stock <= 0;
+    const stockBadge = isOutOfStock
+        ? '<span class="badge bg-danger">Out of Stock</span>'
+        : `<span class="badge bg-success">${product.stock} in stock</span>`;
+
     col.innerHTML = `
     <div class="card h-100 shadow-sm border-0">
         ${product.imageURL ? `<img src="${product.imageURL}" class="card-img-top">` : ""}
         <div class="card-body d-flex flex-column">
-            <h5 class="fw-bold">${product.name}</h5>
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="fw-bold mb-0">${product.name}</h5>
+                ${stockBadge}
+            </div>
             <p class="text-truncate" title="${product.desc}">${product.desc}</p>
             <p class="fw-bold text-success mb-2">₱${product.price.toFixed(2)}</p>
 
@@ -179,14 +191,18 @@ function renderProduct(product) {
             </div>
 
             <div class="d-grid gap-2 mt-auto">
-                <button class="btn btn-sm btn-primary add-cart">Add to Cart</button>
+                <button class="btn btn-sm btn-primary add-cart" ${isOutOfStock ? 'disabled' : ''}>
+                    ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                </button>
                 <button class="btn btn-sm btn-outline-secondary contact-seller">Contact Seller</button>
             </div>
         </div>
     </div>
     `;
 
-    col.querySelector(".add-cart").onclick = () => addToCart(product.id);
+    if (!isOutOfStock) {
+        col.querySelector(".add-cart").onclick = () => addToCart(product.id);
+    }
     col.querySelector(".contact-seller").onclick = () => contactSeller(product.id);
 
     $("productList").appendChild(col);
@@ -198,23 +214,39 @@ function renderProduct(product) {
 function updateCartCount() {
     const badgeMobile = $("cartCountMobile");
     const badgeDesktop = $("cartCountDesktop");
-    if (badgeMobile) badgeMobile.textContent = cart.length;
-    if (badgeDesktop) badgeDesktop.textContent = cart.length;
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (badgeMobile) badgeMobile.textContent = totalItems;
+    if (badgeDesktop) badgeDesktop.textContent = totalItems;
 }
 
 
 function addToCart(id) {
     if (!requireLogin()) return;
 
-    if (cart.some(item => item.id === id)) {
-        alert("Item already in cart.");
-        return;
-    }
-
     const product = products.find(p => p.id === id);
     if (!product) return;
 
-    cart.push({ ...product });
+    // Check if product has stock
+    if (product.stock <= 0) {
+        alert("This product is out of stock.");
+        return;
+    }
+
+    // Check if item already exists in cart
+    const existingItem = cart.find(item => item.id === id);
+
+    if (existingItem) {
+        // Check if we can add more
+        if (existingItem.quantity >= product.stock) {
+            alert(`Cannot add more. Only ${product.stock} available in stock.`);
+            return;
+        }
+        existingItem.quantity++;
+    } else {
+        // Add new item with quantity 1
+        cart.push({ ...product, quantity: 1 });
+    }
+
     updateCartCount();
     renderCart();
 
@@ -227,10 +259,36 @@ function removeFromCart(id) {
     renderCart();
 }
 
+function updateQuantity(id, change) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+
+    const newQuantity = item.quantity + change;
+
+    // Validate quantity
+    if (newQuantity < 1) {
+        removeFromCart(id);
+        return;
+    }
+
+    if (newQuantity > product.stock) {
+        alert(`Only ${product.stock} available in stock.`);
+        return;
+    }
+
+    item.quantity = newQuantity;
+    updateCartCount();
+    renderCart();
+}
+
 function renderCart() {
     const cartItems = $("cartItems");
     const emptyText = $("emptyCartText");
     const totalEl = $("cartTotal");
+    const addressSection = $("deliveryAddressSection");
 
     if (!cartItems) return;
     cartItems.innerHTML = "";
@@ -238,45 +296,99 @@ function renderCart() {
     if (!cart.length) {
         emptyText.style.display = "block";
         totalEl.textContent = "0.00";
+        if (addressSection) addressSection.style.display = "none";
         return;
     }
 
     emptyText.style.display = "none";
+    if (addressSection) addressSection.style.display = "block";
+
     let total = 0;
 
-    cart.forEach(item => {
-        total += item.price;
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
 
         const paymentOptions = item.payments.map(p => `<option value="${p}">${p}</option>`).join("");
         const logisticsOptions = item.logistics.map(l => `<option value="${l}">${l}</option>`).join("");
 
         const el = document.createElement("div");
-        el.className = "border-bottom pb-2 mb-3 d-flex flex-column gap-2";
+        el.className = "card mb-3 shadow-sm";
 
         el.innerHTML = `
-            <div class="d-flex gap-2 align-items-center">
-                ${item.imageURL ? `<img src="${item.imageURL}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;">` : ""}
-                <div class="flex-grow-1">
-                    <strong>${item.name}</strong><br>
-                    ₱${item.price.toFixed(2)}
+            <div class="card-body">
+                <!-- Item Header with Number -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-secondary">Item ${index + 1}</span>
+                    <button class="btn btn-sm btn-danger remove-btn">
+                        <small>Remove</small>
+                    </button>
                 </div>
-                <button class="btn btn-sm btn-danger">&times;</button>
-            </div>
 
-            <!-- Payment & Logistics Dropdowns -->
-            <div class="d-flex gap-2 flex-wrap">
-                <div>
-                    <label class="form-label small mb-1">Payment</label>
-                    <select class="form-select form-select-sm">${paymentOptions}</select>
+                <!-- Product Info -->
+                <div class="d-flex gap-3 mb-3">
+                    ${item.imageURL ? `<img src="${item.imageURL}" style="width:80px;height:80px;border-radius:8px;object-fit:cover;" class="flex-shrink-0">` : ""}
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">${item.name}</h6>
+                        <div class="text-muted small mb-2">${item.desc}</div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-muted small">₱${item.price.toFixed(2)} each</span>
+                            <span class="text-muted">•</span>
+                            <span class="badge bg-light text-dark">${item.stock} in stock</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label class="form-label small mb-1">Logistics</label>
-                    <select class="form-select form-select-sm">${logisticsOptions}</select>
+
+                <!-- Quantity Controls -->
+                <div class="border-top pt-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="small fw-semibold mb-0 me-2">Quantity:</label>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button class="btn btn-outline-secondary qty-minus">−</button>
+                                <button class="btn btn-outline-secondary" disabled style="min-width:45px;">${item.quantity}</button>
+                                <button class="btn btn-outline-secondary qty-plus">+</button>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="small text-muted">Subtotal</div>
+                            <div class="fw-bold text-success h5 mb-0">₱${itemTotal.toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment & Logistics -->
+                <div class="border-top pt-3">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold mb-1">Payment Method</label>
+                            <select class="form-select form-select-sm payment-select">${paymentOptions}</select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-semibold mb-1">Delivery Method</label>
+                            <select class="form-select form-select-sm logistics-select">${logisticsOptions}</select>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
 
-        el.querySelector("button").onclick = () => removeFromCart(item.id);
+        el.querySelector(".remove-btn").onclick = () => removeFromCart(item.id);
+        el.querySelector(".qty-minus").onclick = () => updateQuantity(item.id, -1);
+        el.querySelector(".qty-plus").onclick = () => updateQuantity(item.id, 1);
+
+        // Store selected payment and logistics
+        el.querySelector(".payment-select").addEventListener("change", (e) => {
+            item.selectedPayment = e.target.value;
+        });
+        el.querySelector(".logistics-select").addEventListener("change", (e) => {
+            item.selectedLogistics = e.target.value;
+        });
+
+        // Set default selections
+        if (!item.selectedPayment) item.selectedPayment = item.payments[0];
+        if (!item.selectedLogistics) item.selectedLogistics = item.logistics[0];
+
         cartItems.appendChild(el);
     });
 
@@ -286,18 +398,110 @@ function renderCart() {
 function checkoutCart() {
     if (!cart.length) return alert("Cart is empty!");
 
+    // Validate delivery address
+    const addressInput = $("deliveryAddress");
+    if (!addressInput || !addressInput.value.trim()) {
+        alert("Please enter your delivery address before checking out.");
+        addressInput?.focus();
+        return;
+    }
+
+    const deliveryAddress = addressInput.value.trim();
+
+    // Create order summary
+    const orderDate = new Date().toLocaleString();
+    let orderHTML = `
+        <div class="alert alert-success">
+            <h6 class="mb-1">✓ Your order has been placed successfully!</h6>
+            <small>Order Date: ${orderDate}</small>
+        </div>
+
+        <div class="mb-3">
+            <h6 class="fw-bold">Delivery Address:</h6>
+            <p class="mb-0">${deliveryAddress}</p>
+        </div>
+
+        <h6 class="fw-bold mb-3">Order Items:</h6>
+    `;
+
+    let grandTotal = 0;
+
     cart.forEach(item => {
-        document.querySelector(`[data-id="${item.id}"]`)?.remove();
-        products = products.filter(p => p.id !== item.id);
+        const itemTotal = item.price * item.quantity;
+        grandTotal += itemTotal;
+
+        orderHTML += `
+            <div class="border rounded p-3 mb-3">
+                <div class="d-flex gap-3 mb-2">
+                    ${item.imageURL ? `<img src="${item.imageURL}" style="width:80px;height:80px;border-radius:6px;object-fit:cover;">` : ""}
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">${item.name}</h6>
+                        <p class="mb-1 small text-muted">${item.desc}</p>
+                        <p class="mb-0">
+                            <span class="fw-bold">₱${item.price.toFixed(2)}</span> × ${item.quantity} = 
+                            <span class="fw-bold text-success">₱${itemTotal.toFixed(2)}</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="border-top pt-2 mt-2">
+                    <div class="row small">
+                        <div class="col-md-6 mb-2">
+                            <strong>Seller:</strong> ${item.sellerName}<br>
+                            <strong>Contact:</strong> ${item.sellerContact}<br>
+                            <strong>Address:</strong> ${item.sellerAddress}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Payment:</strong> ${item.selectedPayment || item.payments[0]}<br>
+                            <strong>Logistics:</strong> ${item.selectedLogistics || item.logistics[0]}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Update product stock
+        const product = products.find(p => p.id === item.id);
+        if (product) {
+            product.stock -= item.quantity;
+
+            // Update the product card in marketplace
+            const productCard = document.querySelector(`[data-id="${item.id}"]`);
+            if (product.stock <= 0) {
+                // Remove product from marketplace if out of stock
+                productCard?.remove();
+                products = products.filter(p => p.id !== item.id);
+            } else if (productCard) {
+                // Update stock badge
+                const stockBadge = productCard.querySelector('.badge');
+                if (stockBadge) {
+                    stockBadge.textContent = `${product.stock} in stock`;
+                }
+            }
+        }
     });
 
+    orderHTML += `
+        <div class="border-top pt-3 mt-3">
+            <h5 class="text-end mb-0">Grand Total: <span class="text-success">₱${grandTotal.toFixed(2)}</span></h5>
+        </div>
+    `;
+
+    // Show order summary modal
+    $("orderSummaryContent").innerHTML = orderHTML;
+
+    // Clear cart
     cart = [];
     updateCartCount();
     renderCart();
-    updateMarketplaceState();
+    addressInput.value = "";
 
+    // Hide cart modal and show order summary
     bootstrap.Modal.getInstance($("cartModal")).hide();
-    alert("Checkout successful!");
+
+    setTimeout(() => {
+        new bootstrap.Modal($("orderSummaryModal")).show();
+    }, 300);
 }
 
 /* =====================================================
