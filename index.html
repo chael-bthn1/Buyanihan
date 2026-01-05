@@ -462,6 +462,12 @@
                             placeholder="Price" required>
                         <textarea id="pDesc" class="form-control mb-2" placeholder="Description"></textarea>
 
+                        <!-- STOCKS -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Stock Quantity</label>
+                            <input type="number" id="pStock" class="form-control" min="1" required>
+                        </div>
+
                         <!-- PRODUCT IMAGE -->
                         <label class="form-label mt-2">Product Image</label>
                         <input id="pImage" type="file" class="form-control mb-3" accept="image/*">
@@ -664,9 +670,33 @@
                     <p class="text-center text-muted" id="emptyCartText">Your cart is empty.</p>
                     <!-- Empty text stays outside -->
                 </div>
+                <div id="deliveryAddressSection" style="display:none;" class="mt-3 p-3 border rounded bg-light">
+                    <label class="form-label fw-semibold">Delivery Address</label>
+                    <textarea id="deliveryAddress" class="form-control" rows="2"
+                        placeholder="Enter your complete delivery address" required></textarea>
+                    <small class="text-muted">This address will be used for all items in your cart.</small>
+                </div>
                 <div class="modal-footer">
                     <h6 class="me-auto">Total: ₱<span id="cartTotal">0</span></h6>
                     <button class="btn btn-success" onclick="checkoutCart()">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER SUMMARY MODAL -->
+    <div class="modal fade" id="orderSummaryModal">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">✓ Order Confirmed</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderSummaryContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
